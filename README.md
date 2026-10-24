@@ -141,7 +141,7 @@ Ensure that `server/.env` and `client/.env` exist (these are already generated f
 ```env
 PORT=5000
 MONGODB_URI=mongodb://127.0.0.1:27017/smartspend
-JWT_SECRET=smartspend_dev_jwt_secret_9f82a17b8c34e621
+JWT_SECRET=replace_with_a_strong_random_secret
 JWT_EXPIRES_IN=7d
 CLIENT_URL=http://localhost:5173
 NODE_ENV=development
