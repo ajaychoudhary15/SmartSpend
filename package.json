@@ -1,23 +1,27 @@
 {
-  "name": "smartspend-client",
-  "private": true,
+  "name": "smartspend",
   "version": "1.0.0",
-  "type": "module",
+  "description": "SmartSpend - Complete Smart Expense Manager & Personal Finance Dashboard",
+  "main": "server/index.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "start": "node server/index.js",
+    "build": "npm run build --prefix client",
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client"
   },
-  "dependencies": {
-    "axios": "^1.6.8",
-    "lucide-react": "^0.378.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.23.0",
-    "recharts": "^2.12.7"
-  },
+  "keywords": [
+    "expense-tracker",
+    "finance-dashboard",
+    "react",
+    "express",
+    "mongodb",
+    "recharts"
+  ],
+  "author": "SmartSpend Team",
+  "license": "MIT",
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.2.1",
-    "vite": "^5.2.10"
+    "concurrently": "^8.2.2"
   }
 }
