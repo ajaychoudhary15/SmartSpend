@@ -1,10 +1,15 @@
+
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+
+if (!process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required');
+}
 
 const generateToken = (id) => {
   return jwt.sign(
     { id },
-    process.env.JWT_SECRET || 'smartspend_dev_jwt_secret_9f82a17b8c34e621',
+    process.env.JWT_SECRET,
     {
       expiresIn: process.env.JWT_EXPIRES_IN || '7d',
     }
@@ -34,6 +39,7 @@ const registerUser = async (req, res, next) => {
 
     const normalizedEmail = String(email).trim().toLowerCase();
     const userExists = await User.findOne({ email: normalizedEmail });
+
     if (userExists) {
       return res.status(400).json({
         success: false,
@@ -79,8 +85,10 @@ const loginUser = async (req, res, next) => {
     }
 
     const normalizedEmail = String(email).trim().toLowerCase();
-    // Explicitly select password field as it is excluded by default
-    const user = await User.findOne({ email: normalizedEmail }).select('+password');
+
+    const user = await User.findOne({
+      email: normalizedEmail,
+    }).select('+password');
 
     if (!user || !(await user.matchPassword(password))) {
       return res.status(401).json({
@@ -115,13 +123,20 @@ const getMe = async (req, res) => {
   });
 };
 
-// @desc    Update user profile (currency or name)
+// @desc    Update user profile
 // @route   PUT /api/auth/profile
 // @access  Private
 const updateProfile = async (req, res, next) => {
   try {
     const { name, currency } = req.body || {};
     const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
 
     if (name) user.name = String(name).trim();
     if (currency) user.currency = String(currency).trim();
